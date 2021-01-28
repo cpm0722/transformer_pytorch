@@ -1,2 +1,3 @@
 *.pt
 checkpoint.tar
+.DS_Store
