@@ -10,4 +10,4 @@
 
 - Transformer (Attention is All You Need) pytorch 구현체
 
-- #### [작성 포스트](https://cpm0722.github.io/machine%20learning/paper%20review/pytorch/Transformer-in-pytorch/)
+- #### [작성 포스트](https://cpm0722.github.io/pytorch-implementation/transformer)
