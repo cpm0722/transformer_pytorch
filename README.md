@@ -1,13 +1,3 @@
-# NLP
-
-- NLP Model Implementation in Pytorch
-
-## BlueHouse
-
-- 청와대 청원 classification model (koBERT 기반)
-
-## Transformer
-
-- Transformer (Attention is All You Need) pytorch 구현체
+## Transformer(Attention is All You Need) Implementation in pytorch
 
 - #### [작성 포스트](https://cpm0722.github.io/pytorch-implementation/transformer)
