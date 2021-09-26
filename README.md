@@ -1,4 +1,4 @@
-### [Paper Link](https://arxiv.org/pdf/1706.03762.pdf)
+### [원본 포스트](https://cpm0722.github.io/pytorch-implementation/transformer)
 
 # Why Transformer?
 
