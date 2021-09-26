@@ -19,7 +19,7 @@ Transformer는 input sentence를 넣어 output sentence를 생성해내는 model
 
 ![transformer_simple.png](/images/transformer_simple.png)
 
-![](https://latex.codecogs.com/svg.latex?\Large&space;y=\text{Transformer}(x)\\x,\ y\text{ : sentence})
+$ \text{Transformer}(x)\\x,\ y\text{ : sentence} $
 
 전체적인 생김새를 살펴보자.
 
@@ -33,13 +33,13 @@ Encoder와 Decoder를 자세히 분석하기 이전에, 각각을 함수 형태�
 
 ![encoder_simple.png](/images/encoder_simple.png)
 
-![](https://latex.codecogs.com/svg.latex?\Large&space;c=\text{Encoder}(x)\\x\text{ : sentence}\\c\text{ : context})
+$c=\text{Encoder}(x)\\x\text{ : sentence}\\c\text{ : context}$
 
 Decoder는 Encoder와 방향이 반대이다. context를 input으로 받아 sentence를 output으로 생성해낸다. 이러한 과정을 Decoding이라고 한다. 사실 Decoder는 input으로 context만을 받지는 않고, output으로 생성해내는 sentence를 right shift한 sentence도 함께 입력받지만, 자세한 것은 당장 이해할 필요 없이 단순히 어떤 sentence도 함께 input으로 받는 다는 개념만 잡고 넘어가자. 정리하자면, Decoder는 sentence, context를 input으로 받아 sentence를 만들어내는 함수이다.
 
 ![decoder_simple.png](/images/decoder_simple.png)
 
-![](https://latex.codecogs.com/svg.latex?\Large&space;y=\text{Decoder}(c,z)\\y,\ z\text{ : sentence}\\c\text{ : context})
+$ y=\text{Decoder}(c,z)\\y,\ z\text{ : sentence}\\c\text{ : context} $
 
 Encoder와 Decoder에 모두 context vector가 등장하는데, Encoder는 context를 생성해내고, Decoder는 context를 사용한다. 이러한 흐름으로 Encoder와 Decoder가 연결되어 전체 Transformer를 구성하는 것이다.
 
@@ -63,7 +63,7 @@ class Transformer(nn.Module):
 
 ![encoder.png](/images/encoder.png)
 
- Encoder는 위와 같은 구조로 이루어져 있다. Encoder Layer가 ![](https://latex.codecogs.com/svg.latex?\Large&space;N)개 쌓여진 형태이다. 논문에서는 $N=6$을 사용했다. Encoder Layer는 input과 output의 형태가 동일하다. 어떤 matrix를 input으로 받는다고 했을 때, Encoder Layer가 도출해내는 output은 input과 완전히 동일한 shape를 갖는 matrix가 된다. Encoder Layer $N$개가 쌓여 Encoder를 이룬다고 했을 때, 첫번째 Encoder Layer의 input은 전체 Encoder의 input으로 들어오는 문장 embdding이 된다. 첫번째 layer가 output을 생성해내면 이를 두번째 layer가 input으로 사용하고, 또 그 output을 세번째 layer가 사용하는 식으로 연결되며, 가장 마지막 $N$번째 layer의 output이 전체 Encoder의 output, 즉, context가 된다. 이러한 방식으로 layer들이 연결되기 때문에, Encoder Layer의 input과 output의 shape는 필연적으로 반드시 동일해야만 한다. 여기서 주목해야 하는 지점은 위에서 계속 언급했던 context 역시 Encoder의 input sentence와 동일한 shape를 가진다는 것이다. 즉, 어떤 matrix가 Encoder를 거쳐간다 하더라도 최종 matrix의 shape는 처음의 것과 반드시 같다.
+ Encoder는 위와 같은 구조로 이루어져 있다. Encoder Layer가 $N$개 쌓여진 형태이다. 논문에서는 $N=6$을 사용했다. Encoder Layer는 input과 output의 형태가 동일하다. 어떤 matrix를 input으로 받는다고 했을 때, Encoder Layer가 도출해내는 output은 input과 완전히 동일한 shape를 갖는 matrix가 된다. Encoder Layer $N$개가 쌓여 Encoder를 이룬다고 했을 때, 첫번째 Encoder Layer의 input은 전체 Encoder의 input으로 들어오는 문장 embdding이 된다. 첫번째 layer가 output을 생성해내면 이를 두번째 layer가 input으로 사용하고, 또 그 output을 세번째 layer가 사용하는 식으로 연결되며, 가장 마지막 $N$번째 layer의 output이 전체 Encoder의 output, 즉, context가 된다. 이러한 방식으로 layer들이 연결되기 때문에, Encoder Layer의 input과 output의 shape는 필연적으로 반드시 동일해야만 한다. 여기서 주목해야 하는 지점은 위에서 계속 언급했던 context 역시 Encoder의 input sentence와 동일한 shape를 가진다는 것이다. 즉, 어떤 matrix가 Encoder를 거쳐간다 하더라도 최종 matrix의 shape는 처음의 것과 반드시 같다.
 
  Encoder는 왜 여러 개의 layer를 겹쳐 쌓는 것일까? 각 Encoder Layer의 역할은 무엇일까? 결론부터 말하자면, 각 Encoder Layer는 input으로 들어오는 vector에 대해 더 높은 차원(넓은 관점)에서의 context를 담는다. 높은 차원에서의 context라는 것은 더 추상적인 정보라는 의미이다. Encoder Layer는 내부적으로 어떠한 Mechanism을 사용해 context를 담아내는데, Encoder Layer가 겹겹이 쌓이다 보니 처음에는 원본 문장에 대한 낮은 수준의 context였겠지만 이후 context에 대한 context, context의 context에 대한 context ... 와 같은 식으로 점차 높은 차원의 context가 저장되게 된다. Encoder Layer의 내부적인 작동 방식은 곧 살펴볼 것이기에, 여기서는 직관적으로 Encoder Layer의 역할, Encoder 내부의 전체적인 구조만 이해하고 넘어가자.
 
