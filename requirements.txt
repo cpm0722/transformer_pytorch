@@ -1,0 +1,12 @@
+numpy==1.21.2
+markupsafe==2.0.1
+transformers==4.21.1
+huggingface-hub==0.8.1
+datasets==2.4.0
+spacy==3.0.8
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz#egg=en_core_web_sm
+https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.0.0/de_core_news_sm-3.0.0.tar.gz#egg=de_core_news_sm
+
+-i https://download.pytorch.org/whl/cu113
+torch==1.11.0
+torchtext==0.12.0
