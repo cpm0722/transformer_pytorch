@@ -24,7 +24,7 @@ class PositionalEncoding(nn.Module):
 
 
     def forward(self, x):
-        batch_size, seq_len, d_embed = x.size()
+        _, seq_len, _ = x.size()
         pos_embed = self.encoding[:, :seq_len, :]
         out = x + pos_embed
         return out

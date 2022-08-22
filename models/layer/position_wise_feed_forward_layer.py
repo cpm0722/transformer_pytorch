@@ -10,17 +10,18 @@ import torch.nn as nn
 
 class PositionWiseFeedForwardLayer(nn.Module):
 
-    def __init__(self, first_fc_layer, second_fc_layer, dropout_rate=0):
+    def __init__(self, fc1, fc2, dr_rate=0):
         super(PositionWiseFeedForwardLayer, self).__init__()
-        self.first_fc_layer = first_fc_layer   # (d_embed, d_ff)
+        self.fc1 = fc1   # (d_embed, d_ff)
         self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(p=dropout_rate)
-        self.second_fc_layer = second_fc_layer # (d_ff, d_embed)
+        self.dropout = nn.Dropout(p=dr_rate)
+        self.fc2 = fc2 # (d_ff, d_embed)
 
 
     def forward(self, x):
-        out = self.first_fc_layer(x)
+        out = x
+        out = self.fc1(out)
         out = self.relu(out)
         out = self.dropout(out)
-        out = self.second_fc_layer(out)
+        out = self.fc2(out)
         return out

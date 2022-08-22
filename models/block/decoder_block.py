@@ -13,19 +13,17 @@ from models.layer.residual_connection_layer import ResidualConnectionLayer
 
 class DecoderBlock(nn.Module):
 
-    def __init__(self, masked_multi_head_attention_layer, multi_head_attention_layer, position_wise_feed_forward_layer, norm_layer, dropout_rate=0):
+    def __init__(self, self_attention, cross_attention, position_ff, norm, dr_rate=0):
         super(DecoderBlock, self).__init__()
-        self.masked_multi_head_attention_layer = masked_multi_head_attention_layer
-        self.residual1 = ResidualConnectionLayer(copy.deepcopy(norm_layer), dropout_rate)
-        self.multi_head_attention_layer = multi_head_attention_layer
-        self.residual2 = ResidualConnectionLayer(copy.deepcopy(norm_layer), dropout_rate)
-        self.position_wise_feed_forward_layer = position_wise_feed_forward_layer
-        self.residual3 = ResidualConnectionLayer(copy.deepcopy(norm_layer), dropout_rate)
+        self.self_attention = self_attention
+        self.cross_attention = cross_attention
+        self.position_ff = position_ff
+        self.residuals = [ResidualConnectionLayer(copy.deepcopy(norm), dr_rate) for _ in range(3)]
 
 
-    def forward(self, x, encoder_out, mask, encoder_mask):
-        out = x
-        out = self.residual1(out, lambda out: self.masked_multi_head_attention_layer(query=out, key=out, value=out, mask=mask))
-        out = self.residual2(out, lambda out: self.multi_head_attention_layer(query=out, key=encoder_out, value=encoder_out, mask=encoder_mask))
-        out = self.residual3(out, self.position_wise_feed_forward_layer)
+    def forward(self, tgt, encoder_out, tgt_mask, src_tgt_mask):
+        out = tgt
+        out = self.residuals[0](out, lambda out: self.self_attention(query=out, key=out, value=out, mask=tgt_mask))
+        out = self.residuals[1](out, lambda out: self.cross_attention(query=out, key=encoder_out, value=encoder_out, mask=src_tgt_mask))
+        out = self.residuals[2](out, self.position_ff)
         return out

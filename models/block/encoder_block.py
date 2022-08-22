@@ -13,16 +13,15 @@ from models.layer.residual_connection_layer import ResidualConnectionLayer
 
 class EncoderBlock(nn.Module):
 
-    def __init__(self, multi_head_attention_layer, position_wise_feed_forward_layer, norm_layer, dropout_rate=0):
+    def __init__(self, self_attention, position_ff, norm, dr_rate=0):
         super(EncoderBlock, self).__init__()
-        self.multi_head_attention_layer = multi_head_attention_layer
-        self.residual1 = ResidualConnectionLayer(copy.deepcopy(norm_layer), dropout_rate)
-        self.position_wise_feed_forward_layer = position_wise_feed_forward_layer
-        self.residual2 = ResidualConnectionLayer(copy.deepcopy(norm_layer), dropout_rate)
+        self.self_attention = self_attention
+        self.position_ff = position_ff
+        self.residuals = [ResidualConnectionLayer(copy.deepcopy(norm), dr_rate) for _ in range(2)]
 
 
-    def forward(self, x, mask):
-        out = x
-        out = self.residual1(out, lambda out: self.multi_head_attention_layer(query=out, key=out, value=out, mask=mask))
-        out = self.residual2(out, self.position_wise_feed_forward_layer)
+    def forward(self, src, src_mask):
+        out = src
+        out = self.residuals[0](out, lambda out: self.self_attention(query=out, key=out, value=out, mask=src_mask))
+        out = self.residuals[1](out, self.position_ff)
         return out

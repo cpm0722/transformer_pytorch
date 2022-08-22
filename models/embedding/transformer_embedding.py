@@ -10,15 +10,14 @@ import torch.nn as nn
 
 class TransformerEmbedding(nn.Module):
 
-    def __init__(self, token_embedding, positional_encoding, dropout_rate=0):
+    def __init__(self, token_embed, positional_embed, dr_rate=0):
         super(TransformerEmbedding, self).__init__()
-        self.token_embedding = token_embedding
-        self.positional_encoding = positional_encoding
-        self.dropout = nn.Dropout(p=dropout_rate)
+        self.embedding = nn.Sequential(token_embed, positional_embed)
+        self.dropout = nn.Dropout(p=dr_rate)
 
 
     def forward(self, x):
-        out = self.token_embedding(x)
-        out = self.positional_encoding(out)
+        out = x
+        out = self.embedding(out)
         out = self.dropout(out)
         return out

@@ -13,13 +13,13 @@ import torch.nn.functional as F
 
 class Transformer(nn.Module):
 
-    def __init__(self, src_embed, tgt_embed, encoder, decoder, fc_layer):
+    def __init__(self, src_embed, tgt_embed, encoder, decoder, generator):
         super(Transformer, self).__init__()
         self.src_embed = src_embed
         self.tgt_embed = tgt_embed
         self.encoder = encoder
         self.decoder = decoder
-        self.fc_layer = fc_layer
+        self.generator = generator
 
 
     def encode(self, src, src_mask):
@@ -36,7 +36,7 @@ class Transformer(nn.Module):
         src_tgt_mask = self.make_src_tgt_mask(src, tgt)
         encoder_out = self.encode(src, src_mask)
         decoder_out = self.decode(tgt, encoder_out, tgt_mask, src_tgt_mask)
-        out = self.fc_layer(decoder_out)
+        out = self.generator(decoder_out)
         out = F.log_softmax(out, dim=-1)
         return out, decoder_out
 
@@ -59,6 +59,8 @@ class Transformer(nn.Module):
 
 
     def make_pad_mask(self, query, key, pad_idx=1):
+        # query: (n_batch, query_seq_len)
+        # key: (n_batch, key_seq_len)
         query_seq_len, key_seq_len = query.size(1), key.size(1)
 
         key_mask = key.ne(pad_idx).unsqueeze(1).unsqueeze(2)  # (n_batch, 1, 1, key_seq_len)
