@@ -89,7 +89,7 @@ def evaluate(model, data_loader, criterion):
 
 
 def main():
-    model = build_model(len(DATASET.vocab_src), len(DATASET.vocab_tgt), device=DEVICE, dropout_rate=DROPOUT_RATE)
+    model = build_model(len(DATASET.vocab_src), len(DATASET.vocab_tgt), device=DEVICE, dr_rate=DROPOUT_RATE)
 
     def initialize_weights(model):
         if hasattr(model, 'weight') and model.weight.dim() > 1:

@@ -49,7 +49,7 @@ def greedy_decode(model, src, max_len, start_symbol, end_symbol):
         tgt_mask = model.make_tgt_mask(ys).to(model.device)
         src_tgt_mask = model.make_src_tgt_mask(src, ys).to(model.device)
         out = model.decode(ys, memory, tgt_mask, src_tgt_mask)
-        prob = model.fc_layer(out[:, -1])
+        prob = model.generator(out[:, -1])
         _, next_word = torch.max(prob, dim=1)
         next_word = next_word.item()
 

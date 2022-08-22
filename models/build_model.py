@@ -17,7 +17,7 @@ from models.layer.multi_head_attention_layer import MultiHeadAttentionLayer
 from models.layer.position_wise_feed_forward_layer import PositionWiseFeedForwardLayer
 from models.embedding.transformer_embedding import TransformerEmbedding
 from models.embedding.token_embedding import TokenEmbedding
-from models.embedding.pos_embed import PositionalEncoding
+from models.embedding.positional_encoding import PositionalEncoding
 
 
 def build_model(src_vocab_size, tgt_vocab_size, device=torch.device("cpu"), max_len=256, d_embed=512, n_layer=6, d_model=512, h=8, d_ff=2048, dr_rate=0.1, norm_eps=1e-5):
@@ -29,7 +29,7 @@ def build_model(src_vocab_size, tgt_vocab_size, device=torch.device("cpu"), max_
     pos_embed = PositionalEncoding(d_embed = d_embed, max_len = max_len, device = device)
 
     src_embed = TransformerEmbedding(
-                    token_embed = src_token_embeddding,
+                    token_embed = src_token_embed,
                     pos_embed = copy(pos_embed),
                     dr_rate = dr_rate)
     tgt_embed = TransformerEmbedding(
