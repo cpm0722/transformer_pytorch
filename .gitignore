@@ -1,3 +1,6 @@
+__pycache__
+.data
 *.pt
-checkpoint.tar
+*.out
+checkpoint
 .DS_Store
