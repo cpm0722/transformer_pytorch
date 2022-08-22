@@ -44,6 +44,9 @@ class Multi30k():
                 }
         self.vocab_min_freq = vocab_min_freq
 
+        self.tokenizer_src = self.build_tokenizer(self.lang_src)
+        self.tokenizer_tgt = self.build_tokenizer(self.lang_tgt)
+
         self.train = None
         self.valid = None
         self.test = None
@@ -56,9 +59,6 @@ class Multi30k():
         self.transform_src = None
         self.transform_tgt = None
         self.build_transform()
-
-        self.tokenizer_src = self.build_tokenizer(self.lang_src)
-        self.tokenizer_tgt = self.build_tokenizer(self.lang_tgt)
 
 
     def build_dataset(self, raw_dir="raw", cache_dir=".data"):
