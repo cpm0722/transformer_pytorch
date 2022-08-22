@@ -8,11 +8,8 @@
 import os, sys, time
 import logging
 
-import numpy as np
 import torch
 from torch import nn, optim
-from torch.optim import Adam
-from torch.utils.data import DataLoader
 
 from config import *
 from models.build_model import build_model
@@ -97,7 +94,7 @@ def main():
 
     model.apply(initialize_weights)
 
-    optimizer = Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, eps=ADAM_EPS)
+    optimizer = optim.Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY, eps=ADAM_EPS)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer=optimizer, verbose=True, factor=SCHEDULER_FACTOR, patience=SCHEDULER_PATIENCE)
 
     criterion = nn.CrossEntropyLoss(ignore_index=DATASET.pad_idx)

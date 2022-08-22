@@ -7,7 +7,6 @@
 
 import pickle
 import torch
-import torch.nn as nn
 from torchtext.data.metrics import bleu_score
 
 
